@@ -1,13 +1,19 @@
 defmodule Joviscript.Dfa do
   defstruct [
-    states: MapSet.new(['Q0', 'Q1']),
-    alphabet: MapSet.new(['1', '0']),
+    states: MapSet.new([:qa, :qb]),
+    alphabet: MapSet.new([:a, :b]),
     transitions: %{
-      Q0: [{'1', 'Q0'}, {'0', 'Q1'}],
-      Q1: [{'1', 'Q1'}, {'0', 'Q0'}]
+      q0: %{
+        a: :qa,
+        b: :qb
+      },
+      q1: %{
+        a: :qb,
+        b: :qa
+      }
     },
-    initial_state: 'Q0',
-    final_states: MapSet.new(['Q0'])
+    initial_state: :qa,
+    final_states: MapSet.new([:qa])
   ]
 
   def create(states, alphabet, transitions, initial_state, final_states) do
@@ -25,4 +31,23 @@ defmodule Joviscript.Dfa do
         }
     end
   end
+
+  def advance_state(_dfa, [], current_state) do 
+    current_state
+  end
+
+  def advance_state(dfa, [current_symbol | tail], current_state) do 
+    next_state = dfa.transitions[current_state][current_symbol]
+    advance_state(dfa, tail, next_state)
+  end
+
+  def test(dfa, test_chain) do
+    symbols_sequence = Enum.map(
+      String.graphemes(test_chain), 
+      fn character -> String.to_atom(character) end
+    )
+
+    advance_state(dfa, symbols_sequence, dfa.initial_state)
+  end
 end
+

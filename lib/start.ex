@@ -12,22 +12,23 @@ defmodule Mix.Tasks.Start do
   end
 
   def run(["lexical-analyzer" | files]) do
-    IO.puts("Solicitando a execução do analisador lexico")
+    IO.puts("Requesting lexical-analyzer to run")
 
-    IO.inspect Joviscript.Dfa.create(
-      MapSet.new(['Q0', 'Q1', 'Q2']),
-      MapSet.new(['a', 'b', 'c']),
+    dfa = Joviscript.Dfa.create(
+      MapSet.new([:qa, :qb ]),
+      MapSet.new([:"1", :"0"]),
       %{
-        Q0: [{'a', 'Q0'}, {'b', 'Q1'}, {'c', 'Q1'}],
-        Q1: [{'a', 'Q1'}, {'b', 'Q2'}, {'c', 'Q1'}],
-        Q2: [{'a', 'Q0'}, {'b', 'Q1'}, {'c', 'Q2'}]
+        qa: %{ "1": :qa, "0": :qb },
+        qb: %{ "1": :qb, "0": :qa }
       },
-      'Q0',
-      MapSet.new(['Q1', 'Q2'])
+      :qa,
+      MapSet.new([:qa])
     )
 
+    IO.puts "Test results:"
+    IO.inspect Joviscript.Dfa.test(dfa, "10011110111")
 
-    LexicalAnalyzer.start(files) 
+    LexicalAnalyzer.start(files)
   end
 
   def run([head | tail]) do

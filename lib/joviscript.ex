@@ -13,10 +13,8 @@ defmodule Joviscript do
 
   """
   def start(arguments) do
-    IO.puts "Hello World!"
-    IO.inspect arguments
+    IO.puts("Hello World!")
+    IO.inspect(arguments)
     # :world
   end
 end
-
-

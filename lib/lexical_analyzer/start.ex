@@ -14,7 +14,7 @@ defmodule LexicalAnalyzer do
       "\n" -> :trash
       "\t" -> :trash
       "" -> :trash
-      _ -> :token 
+      _ -> :token
     end
   end
 
@@ -36,12 +36,12 @@ defmodule LexicalAnalyzer do
   end
 
   def run(file_content) do
-    IO.inspect file_content |> extract_tokens |> categorize_tokens |> clear_tokens
+    IO.inspect(file_content |> extract_tokens |> categorize_tokens |> clear_tokens)
   end
 
   def start([file | _remaining_files]) do
-    IO.puts "On: LexicalAnalyzer"
-    IO.inspect file
+    IO.puts("On: LexicalAnalyzer")
+    IO.inspect(file)
 
     case File.read(file) do
       {:ok, file_content} -> run(file_content)
@@ -49,4 +49,3 @@ defmodule LexicalAnalyzer do
     end
   end
 end
-

@@ -44,7 +44,7 @@ defmodule Joviscript.Dfa do
     advance_state(dfa, tail, next_state)
   end
 
-  def test(dfa, test_chain) do
+  def test(%Joviscript.Dfa{}=dfa, test_chain) do
     symbols_sequence =
       Enum.map(
         String.graphemes(test_chain),

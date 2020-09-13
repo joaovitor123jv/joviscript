@@ -1,5 +1,7 @@
-(const rim 42)
+(print (+ 10 20))
 
-(if (= rim 42)
-  "calculo renal"
-  (+ rim rim))
+
+
+
+
+

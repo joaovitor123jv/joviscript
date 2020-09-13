@@ -40,17 +40,21 @@ defmodule Joviscript.Dfa do
   end
 
   def advance_state(dfa, [current_symbol | tail], current_state) do
+    # IO.puts "On State |#{current_state}|, received: |#{current_symbol}|"
+
     next_state = dfa.transitions[current_state][current_symbol]
     advance_state(dfa, tail, next_state)
   end
 
-  def test(%Joviscript.Dfa{}=dfa, test_chain) do
-    symbols_sequence =
-      Enum.map(
-        String.graphemes(test_chain),
-        fn character -> String.to_atom(character) end
-      )
+  def test(%Joviscript.Dfa{} = dfa, test_chain) do
+    symbols_sequence = test_chain
+                       |> String.graphemes()
+                       |> Enum.map(fn character -> String.to_atom(character) end)
 
-    advance_state(dfa, symbols_sequence, dfa.initial_state)
+    final_state = advance_state(dfa, symbols_sequence, dfa.initial_state)
+
+    IO.puts("Final state after test: #{final_state}")
+
+    final_state
   end
 end

@@ -1,38 +1,32 @@
 defmodule LexicalAnalyzer do
-  def categorize_token(token) do
-    case token do
-      "if" -> :condition
-      "function" -> :function_definition
-      "const" -> :attribution
-      "+" -> :sum
-      "*" -> :multiplication
-      "-" -> :subtraction
-      "=" -> :equality_comparation
-      "(" -> :function_call
-      ")" -> :end_of_scope
-      " " -> :trash
-      "\n" -> :trash
-      "\t" -> :trash
-      "" -> :trash
-      _ -> :token
+  def categorize_token(token, recognizer_dfa) do
+    category = Joviscript.Dfa.test(recognizer_dfa, token)
+
+    if category == :error do
+      IO.puts("OHH GOD, THAT's BAAAD: error")
     end
+
+    category
   end
 
   def categorize_tokens(tokens) do
-    Enum.map(tokens, fn token -> categorize_token(token) end)
+    recognizer_dfa = Joviscript.LexicalAnalyzer.Dfa.create()
+    Enum.map(tokens, fn token -> categorize_token(token, recognizer_dfa) end)
   end
 
   def extract_tokens(file_content) do
-    IO.puts("Extraindo tokens de uma string")
+    IO.puts("Extracting tokens from string")
 
     file_content
+    |> String.replace("\n", " ")
+    |> String.replace("\t", " ")
     |> String.replace("(", " ( ")
     |> String.replace(")", " ) ")
     |> String.split(" ")
   end
 
   def clear_tokens(raw_tokens) do
-    Enum.filter(raw_tokens, fn token -> token != :trash end)
+    Enum.filter(raw_tokens, fn token -> (token != :start) && (token != nil) end)
   end
 
   def run(file_content) do
